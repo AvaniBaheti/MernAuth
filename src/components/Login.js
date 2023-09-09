@@ -3,14 +3,15 @@ import { NavLink ,useNavigate} from "react-router-dom"
 import { ToastContainer, toast } from 'react-toastify';
 import "./mix.css"
 
-
 const Login = () => {
+
     const [passShow, setPassShow] = useState(false);
 
     const [inpval, setInpval] = useState({
         email: "",
         password: "",
     });
+
     const history = useNavigate();
 
     const setVal = (e) => {
@@ -24,6 +25,7 @@ const Login = () => {
             }
         })
     };
+
 
     const loginuser = async(e) => {
         e.preventDefault();
@@ -46,31 +48,34 @@ const Login = () => {
             toast.error("password must be 6 char!", {
                 position: "top-center"
             });
-        }
-        const data = await fetch("/login",{
-            method:"POST",
-            headers:{
-                "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-                 email, password
-            })
-        });
+        } else {
+            // console.log("user login succesfully done");
 
-        const res = await data.json();
-        //  console.log(res);
 
-        if(res.status === 201){
-            localStorage.setItem("usersdatatoken",res.result.token);
-            history("/dash")
-            setInpval({...inpval,email:"",password:""});
+            const data = await fetch("/login",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body:JSON.stringify({
+                     email, password
+                })
+            });
+
+            const res = await data.json();
+            //  console.log(res);
+
+            if(res.status === 201){
+                localStorage.setItem("usersdatatoken",res.result.token);
+                history("/dash")
+                setInpval({...inpval,email:"",password:""});
+            }
         }
-    
     }
 
-  return (
-    <>
-<section>
+    return (
+        <>
+            <section>
                 <div className="form_data">
                     <div className="form_heading">
                         <h1>Welcome Back, Log In</h1>
@@ -93,13 +98,13 @@ const Login = () => {
                         </div>
 
                         <button className='btn' onClick={loginuser}>Login</button>
-                        <p>Don't have an Account? <NavLink to="/regisyer">Sign Up</NavLink> </p>
+                        <p>Don't have an Account? <NavLink to="/register">Sign Up</NavLink> </p>
                     </form>
                     <ToastContainer />
                 </div>
             </section>
-    </>
-  )
+        </>
+    )
 }
 
 export default Login
